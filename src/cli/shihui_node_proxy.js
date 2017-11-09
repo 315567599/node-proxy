@@ -10,6 +10,7 @@ import redisCache from '../redisCache';
 import config from '../config';
 import {getTest} from '../permission';
 import {cache} from '../memoryCache';
+import {rp} from '../routes/permission';
 
 function debug() {
     logger.info.apply(logger, ['shihui_node_proxy', ...arguments]);
@@ -27,8 +28,9 @@ function debug() {
 
 const sockets = {};
 const app = express();
+app.use(cookieParser());
 const server = http.createServer(app).listen(config.listenPort);
-debug(`-> running on process ${process.pid}...` )
+debug(`-> running on process ${process.pid}...` );
 server.on('connection', initConnections);
 
 function initConnections(socket) {
@@ -87,8 +89,11 @@ app.use('/promise', (req, res)=>{
        res.json(data);
    });
 });
+
+//other router
+app.use(rp);
+
 // proxy
-app.use(cookieParser());
 var options = {
     proxyReqOptDecorator: function(proxyReq, originalReq) {
         return new Promise((resolve, reject)=>{

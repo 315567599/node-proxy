@@ -1,13 +1,14 @@
 import promiseRequest from './requestPromise';
 import logger from './logger';
 import {cache} from './memoryCache';
+import {redisObj} from './redisCache';
 
 function debug() {
     logger.info.apply(logger, ['permission', ...arguments]);
 }
 
 export function getTest() {
-    cache.put('jiangchao', 'test value');
+    //redisObj.put("jiangchao", "hello,jiangchao").then(()=>{return debug('->redis put')});
    const options = {
       hostname:'test.v2.goods.17shihui.com',
        port:80,
@@ -18,4 +19,12 @@ export function getTest() {
        }
    };
    return promiseRequest(options);
+}
+
+export function getInfoByToken(token) {
+    if(!token) {
+       return Promise.resolve(null);
+    }
+   let key = 'auth_' + token;
+   return redisObj.get(key);
 }

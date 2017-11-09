@@ -1,5 +1,5 @@
 /**
- *  request promise, wrapper , so then.then.then...
+ *  request promise wrapper , so then.then.then...
  */
 //const request = require('request');
 const http = require('http');

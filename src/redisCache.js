@@ -1,5 +1,6 @@
 import redis from 'redis';
 import logger from './logger';
+import config from './config';
 
 const DEFAULT_REDIS_TTL = 60 * 2 * 1000; // 2 hour
 
@@ -7,7 +8,7 @@ function debug() {
     logger.info.apply(logger, ['redisCache', ...arguments]);
 }
 
-export class redisCache {
+class redisCache {
     constructor(redisCtx, ttl = DEFAULT_REDIS_TTL) {
         this.client = redis.createClient(redisCtx);
         this.p = Promise.resolve();
@@ -80,4 +81,9 @@ export class redisCache {
     }
 }
 
-export default redisCache;
+const redisCtx = {
+    host:config.redisHost,
+    port:config.reidsPort
+};
+const redisObj = new redisCache(redisCtx);
+export {redisObj};

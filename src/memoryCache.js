@@ -1,6 +1,6 @@
 import logger from './logger';
 
-const DEFAULT_CACHE_TTL = 60 * 2 * 1000;
+const DEFAULT_CACHE_TTL = 60 * 60 * 2 * 1000; //2 hour
 
 function debug() {
     logger.info.apply(logger, ['memoryCache', ...arguments]);
