@@ -7,9 +7,9 @@ const http = require('http');
 const proxyConfg = require('../proxy.json');
 import logger from  '../logger';
 import redisCache from '../redisCache';
-import { memoryCache } from '../memoryCache';
 import config from '../config';
 import {getTest} from '../permission';
+import {cache} from '../memoryCache';
 
 function debug() {
     logger.info.apply(logger, ['shihui_node_proxy', ...arguments]);
@@ -74,6 +74,16 @@ app.use('/connections', (req, res)=> {
        conn += key;
     });
     res.send(conn);
+});
+
+app.use('/cache', (req, res) => {
+    debug(req.host, '->request: /cache');
+    let cacheObj = cache.all();
+    let str = '';
+    Object.keys(cacheObj).forEach((key) => {
+        str += key;
+    });
+    res.send(str);
 });
 
 app.use('/promise', (req, res)=>{

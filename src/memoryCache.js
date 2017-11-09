@@ -6,7 +6,7 @@ function debug() {
     logger.info.apply(logger, ['memoryCache', ...arguments]);
 }
 
-export class memoryCache {
+ class memoryCache {
     constructor() {
         this.ttl = DEFAULT_CACHE_TTL;
         this.cache = Object.create(null);
@@ -63,5 +63,11 @@ export class memoryCache {
         this.cache = Object.create(null);
     }
 
+    all() {
+        return this.cache;
+    }
+
 }
 
+const cache = new memoryCache();
+export {cache};

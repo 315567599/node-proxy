@@ -1,11 +1,13 @@
 import promiseRequest from './requestPromise';
 import logger from './logger';
+import {cache} from './memoryCache';
 
 function debug() {
-    logger.info.apply(logger, ['shihui_node_proxy', ...arguments]);
+    logger.info.apply(logger, ['permission', ...arguments]);
 }
 
 export function getTest() {
+    cache.put('jiangchao', 'test value');
    const options = {
       hostname:'test.v2.goods.17shihui.com',
        port:80,
