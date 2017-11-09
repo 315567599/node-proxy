@@ -79,17 +79,21 @@ app.use('/connections', (req, res)=> {
 app.use(cookieParser());
 var options = {
     proxyReqOptDecorator: function(proxyReq, originalReq) {
-        proxyReq.headers['X-MATRIX-UID'] = 1000;
-        if (originalReq.cookies.token) {
-            proxyReq.headers['token'] = originalReq.cookies.token;
-        }
-        return proxyReq;
+        return new Promise((resolve, reject)=>{
+            proxyReq.headers['X-MATRIX-UID'] = 1000;
+            if (originalReq.cookies.token) {
+                proxyReq.headers['token'] = originalReq.cookies.token;
+            }
+            resolve(proxyReq);
+        });
     },
     limit: '500mb',
     timeout: 5000, // 5 seconds
     userResDecorator: function(proxyRes, proxyResData, userReq, userRes) {
-        debug('->proxy', userReq.path);
-        return proxyResData;
+        return new Promise((resolve,reject)=>{
+            resolve(proxyResData);
+            debug('->proxy', userReq.path);
+        });
     }
 };
 var env = process.env.NODE_ENV !== 'production' ? 'test_host' : 'host';
