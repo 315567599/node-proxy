@@ -9,6 +9,7 @@ import logger from  '../logger';
 import redisCache from '../redisCache';
 import { memoryCache } from '../memoryCache';
 import config from '../config';
+import {getTest} from '../permission';
 
 function debug() {
     logger.info.apply(logger, ['shihui_node_proxy', ...arguments]);
@@ -75,6 +76,12 @@ app.use('/connections', (req, res)=> {
     res.send(conn);
 });
 
+app.use('/promise', (req, res)=>{
+   getTest().then((data)=>{
+       debug('->request /promise');
+       res.json(data);
+   });
+});
 // proxy
 app.use(cookieParser());
 var options = {
