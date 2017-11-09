@@ -25,11 +25,6 @@ function debug() {
 //redis.put("jiangchao", "hello,jiangchao").then(()=>{return debug('->redis put')});
 //redis.put("jiangchao1", "hello,jiangchao1").then(()=>{ return debug('redis put')});
 
-//memory cache
-//const cache = new memoryCache();
-//cache.put('jiangchao', 'value');
-//debug('result', cache.get('jiangchao'));
-
 const sockets = {};
 const app = express();
 const server = http.createServer(app).listen(config.listenPort);
