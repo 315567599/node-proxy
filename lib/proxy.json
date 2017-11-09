@@ -1,0 +1,106 @@
+{
+  "passport": {
+    "host": "passport.17shihui.com",
+    "test_host": "test.passport.17shihui.com"
+  },
+  "pass": {
+    "host": "paas.api.intra.hiwemeet.com",
+    "test_host": "test.paas.api.intra.hiwemeet.com"
+  },
+  "gongxiao":{
+    "host":"gongxiao.api.intra.hiwemeet.com",
+    "test_host":"test.gongxiao.api.intra.hiwemeet.com"
+  },
+  "data":{
+    "host":"data.17shihui.com",
+    "test_host":"data.17shihui.com"
+  },
+  "sass":{
+    "host":"http://saas.17shihui.com",
+    "test_host":"http://test2.saas.17shihui.com"
+  },
+  "goods2":{
+    "host":"goods.hiwemeet.com",
+    "test_host":"test.v2.goods.17shihui.com"
+  },
+  "logistics":{
+    "host":"logistics.api.intra.hiwemeet.com",
+    "test_host":"test.logistics.api.intra.hiwemeet.com"
+  },
+  "bankroll":{
+    "host":"bankroll.api.intra.hiwemeet.com",
+    "test_host":"test.bankroll.api.intra.hiwemeet.com"
+  },
+  "shihuo":{
+    "host":"shihuo.api.intra.hiwemeet.com",
+    "test_host":"test.shihuo.api.intra.hiwemeet.com"
+  },
+  "any": {
+    "host": "node.api.intra.hiwemeet.com",
+    "test_host": "test.node.api.intra.hiwemeet.com"
+  },
+  "callcenter":{
+    "host":"callcenter.api.intra.hiwemeet.com",
+    "test_host":"test.callcenter.api.intra.hiwemeet.com"
+  },
+  "trading": {
+    "host": "trading.17shihui.com",
+    "test_host": "test.trading.17shihui.com"
+  },
+  "img": {
+    "host": "10.0.8.8:2080",
+    "test_host": "183.136.160.212:2080"
+  },
+  "operate": {
+    "host": "operate.api.intra.hiwemeet.com",
+    "test_host": "test.operate.api.intra.hiwemeet.com"
+  },
+  "ops": {
+    "host": "app.hiwemeet.com",
+    "test_host": "test2.app.intra.hiwemeet.com"
+  },
+  "order": {
+    "host": "order.intra.hiwemeet.com",
+    "test_host": "test2.order.intra.hiwemeet.com"
+  },
+  "sms": {
+    "test_host": "test2.currency.intra.hiwemeet.com",
+    "host": "currency.hiwemeet.com"
+  },
+  "php": {
+    "test_host": "test.pay.17shihui.com",
+    "host": "pay.17shihui.com"
+  },
+  "api": {
+    "test_host": "test2.api.intra.hiwemeet.com",
+    "host": "api.intra.hiwemeet.com"
+  },
+  "hmp": {
+    "test_host": "test.hmp.api.intra.hiwemeet.com",
+    "host": "hmp.api.intra.hiwemeet.com"
+  },
+  "noIntraapi": {
+    "test_host": "test2.api.hiwemeet.com",
+    "host": "api.intra.hiwemeet.com"
+  },
+  "smsapi": {
+    "test_host": "test.smsapi.intra.17shihui.com",
+    "host": "smsapi.intra.17shihui.com"
+  },
+  "engine": {
+    "test_host": "test.engine.17shihui.com",
+    "host": "engine.17shihui.com"
+  },
+  "ucenter": {
+    "test_host": "test.ucenter.17shihui.com",
+    "host": "ucenter.17shihui.com"
+  },
+  "oms": {
+    "test_host": "test.oms.17shihui.com",
+    "host": "oms.17shihui.com"
+  },
+  "fresh": {
+    "test_host": "test.fresh.17shihui.com",
+    "host": "fresh.17shihui.com"
+  }
+}

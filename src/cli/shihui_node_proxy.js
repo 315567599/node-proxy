@@ -1,8 +1,98 @@
-/**
- * author: jiangchao@17shihui.com
- * date: 2017-11-8
- */
-import logger from  '../logger';
 
-console.log("starting server....");
-logger.info('debug',"hello,logger");
+const express = require('express');
+const proxy = require('express-http-proxy');
+const cookieParser = require('cookie-parser');
+const https = require('https');
+const http = require('http');
+const proxyConfg = require('../proxy.json');
+import logger from  '../logger';
+import redisCache from '../redisCache';
+import { memoryCache } from '../memoryCache';
+import config from '../config';
+
+function debug() {
+    logger.info.apply(logger, ['shihui_node_proxy', ...arguments]);
+}
+
+//redis cache
+//const redisCtx = {
+//    host:config.redisHost,
+//    port:config.reidsPort
+//};
+
+//const redis = new redisCache(redisCtx);
+//redis.put("jiangchao", "hello,jiangchao").then(()=>{return debug('->redis put')});
+//redis.put("jiangchao1", "hello,jiangchao1").then(()=>{ return debug('redis put')});
+
+//memory cache
+//const cache = new memoryCache();
+//cache.put('jiangchao', 'value');
+//debug('result', cache.get('jiangchao'));
+
+const sockets = {};
+const app = express();
+const server = http.createServer(app).listen(config.listenPort);
+debug(`-> running on process ${process.pid}...` )
+server.on('connection', initConnections);
+
+function initConnections(socket) {
+    const socketId = socket.remoteAddress + ':' + socket.remotePort;
+    sockets[socketId] = socket;
+    socket.on('close', () => {
+        delete sockets[socketId];
+    });
+}
+
+function destroyAliveConnections() {
+    for (const socketId in sockets) {
+        try {
+            sockets[socketId].destroy();
+        } catch (e) { /* */ }
+    }
+}
+
+function handleShutdown() {
+   debug('-> process shutdown');
+   destroyAliveConnections();
+   server.close();
+}
+
+process.on('SIGTERM', handleShutdown);
+process.on('SIGINT', handleShutdown);
+
+//sys
+app.use('/health', (req, res)=> {
+    debug(req.host, '->request: /health');
+    res.send('good')
+});
+
+app.use('/connections', (req, res)=> {
+    debug(req.host, '->request: /connections');
+    let conn = '';
+    Object.keys(sockets).forEach((key) => {
+       conn += key;
+    });
+    res.send(conn);
+});
+
+// proxy
+app.use(cookieParser());
+var options = {
+    proxyReqOptDecorator: function(proxyReq, originalReq) {
+        proxyReq.headers['X-MATRIX-UID'] = 1000;
+        if (originalReq.cookies.token) {
+            proxyReq.headers['token'] = originalReq.cookies.token;
+        }
+        return proxyReq;
+    },
+    limit: '500mb',
+    timeout: 5000, // 5 seconds
+    userResDecorator: function(proxyRes, proxyResData, userReq, userRes) {
+        debug('->proxy', userReq.path);
+        return proxyResData;
+    }
+};
+var env = process.env.NODE_ENV !== 'production' ? 'test_host' : 'host';
+for (var key in proxyConfg) {
+    app.use("/p/" + key, proxy(proxyConfg[key][env], options));
+}
