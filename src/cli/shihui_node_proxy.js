@@ -90,34 +90,34 @@ var options = {
     proxyReqOptDecorator: function(proxyReq, originalReq) {
         let token = originalReq.cookies.token;
         debug('-> proxy with token', token );
-       getUserInfoByToken(token).then((data)=>{
-           debug('->proxy with data', data);
-           return new Promise((resolve, reject)=>{
-               proxyReq.headers['X-MATRIX-UID'] = 1000;
-             //  if (data.id) {
-             //      proxyReq.headers['X-UID'] = data.id;
-             //  }
-             //  if (data.user_name) {
-             //      proxyReq.headers['X-USERNAME'] = data.user_name;
-             //  }
-             //  if (data.department) {
-             //      proxyReq.headers['X-DEPARTMENT'] = data.department;
-             //  }
-             //  if (data.channel_id) {
-             //      proxyReq.headers['X-CHANNETL_ID'] = data.channel_id;
-             //  }
-             //  if (data.company_id) {
-             //      proxyReq.headers['X-COMPANY_ID'] = data.company_id;
-             //  }
-             //  if (data.yun_channel_id) {
-             //      proxyReq.headers['X-YUN_CHANNEL_ID'] = data.yun_channel_id;
-             //  }
-               if (originalReq.cookies.token) {
-                   proxyReq.headers['token'] = originalReq.cookies.token;
-               }
-               resolve(proxyReq);
-           });
-       });
+        return new Promise((resolve, reject)=>{
+            proxyReq.headers['X-MATRIX-UID'] = 1000;
+            if (originalReq.cookies.token) {
+                proxyReq.headers['token'] = originalReq.cookies.token;
+            }
+            getUserInfoByToken(token).then((data=>{
+                  if (data.id) {
+                      proxyReq.headers['X-UID'] = data.id;
+                  }
+                  if (data.user_name) {
+                      proxyReq.headers['X-USERNAME'] = data.user_name;
+                  }
+                  if (data.department) {
+                      proxyReq.headers['X-DEPARTMENT'] = data.department;
+                  }
+                  if (data.channel_id) {
+                      proxyReq.headers['X-CHANNETL_ID'] = data.channel_id;
+                  }
+                  if (data.company_id) {
+                      proxyReq.headers['X-COMPANY_ID'] = data.company_id;
+                  }
+                  if (data.yun_channel_id) {
+                      proxyReq.headers['X-YUN_CHANNEL_ID'] = data.yun_channel_id;
+                  }
+
+                resolve(proxyReq);
+            }));
+        });
     },
     limit: '500mb',
     timeout: 5000, // 5 seconds
