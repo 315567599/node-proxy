@@ -21,7 +21,7 @@ export function getTest() {
    return promiseRequest(options);
 }
 
-export function getInfoByToken(token) {
+export function getUserInfoByToken(token) {
     if(!token) {
        return Promise.resolve(null);
     }

@@ -1,4 +1,3 @@
-
 const express = require('express');
 const proxy = require('express-http-proxy');
 const cookieParser = require('cookie-parser');
@@ -6,26 +5,18 @@ const https = require('https');
 const http = require('http');
 const proxyConfg = require('../proxy.json');
 import logger from  '../logger';
-import redisCache from '../redisCache';
 import config from '../config';
 import {getTest} from '../permission';
 import {cache} from '../memoryCache';
 import {rp} from '../routes/permission';
+import {getUserInfoByToken} from '../permission';
 
+//display debug info , and write file
 function debug() {
     logger.info.apply(logger, ['shihui_node_proxy', ...arguments]);
 }
 
-//redis cache
-//const redisCtx = {
-//    host:config.redisHost,
-//    port:config.reidsPort
-//};
-
-//const redis = new redisCache(redisCtx);
-//redis.put("jiangchao", "hello,jiangchao").then(()=>{return debug('->redis put')});
-//redis.put("jiangchao1", "hello,jiangchao1").then(()=>{ return debug('redis put')});
-
+//express start
 const sockets = {};
 const app = express();
 app.use(cookieParser());
@@ -54,11 +45,12 @@ function handleShutdown() {
    destroyAliveConnections();
    server.close();
 }
-
+//hook exception
 process.on('SIGTERM', handleShutdown);
 process.on('SIGINT', handleShutdown);
 
-//sys
+
+//sys route
 app.use('/health', (req, res)=> {
     debug(req.host, '->request: /health');
     res.send('good')
@@ -93,16 +85,39 @@ app.use('/promise', (req, res)=>{
 //other router
 app.use(rp);
 
-// proxy
+// proxy, http headers with common info
 var options = {
     proxyReqOptDecorator: function(proxyReq, originalReq) {
-        return new Promise((resolve, reject)=>{
-            proxyReq.headers['X-MATRIX-UID'] = 1000;
-            if (originalReq.cookies.token) {
-                proxyReq.headers['token'] = originalReq.cookies.token;
-            }
-            resolve(proxyReq);
-        });
+        let token = originalReq.cookies.token;
+        debug('-> proxy with token', token );
+       getUserInfoByToken(token).then((data)=>{
+           debug('->proxy with data', data);
+           return new Promise((resolve, reject)=>{
+               proxyReq.headers['X-MATRIX-UID'] = 1000;
+             //  if (data.id) {
+             //      proxyReq.headers['X-UID'] = data.id;
+             //  }
+             //  if (data.user_name) {
+             //      proxyReq.headers['X-USERNAME'] = data.user_name;
+             //  }
+             //  if (data.department) {
+             //      proxyReq.headers['X-DEPARTMENT'] = data.department;
+             //  }
+             //  if (data.channel_id) {
+             //      proxyReq.headers['X-CHANNETL_ID'] = data.channel_id;
+             //  }
+             //  if (data.company_id) {
+             //      proxyReq.headers['X-COMPANY_ID'] = data.company_id;
+             //  }
+             //  if (data.yun_channel_id) {
+             //      proxyReq.headers['X-YUN_CHANNEL_ID'] = data.yun_channel_id;
+             //  }
+               if (originalReq.cookies.token) {
+                   proxyReq.headers['token'] = originalReq.cookies.token;
+               }
+               resolve(proxyReq);
+           });
+       });
     },
     limit: '500mb',
     timeout: 5000, // 5 seconds
